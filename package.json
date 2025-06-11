@@ -1,5 +1,5 @@
 {
-  "name": "cashcard-calculator-no-overpay",
+  "name": "cashcard-greedy-closest",
   "version": "1.0.0",
   "scripts": {
     "dev": "vite",
@@ -12,9 +12,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.0.0",
-    "vite": "^4.0.0",
-    "tailwindcss": "^3.0.0",
-    "autoprefixer": "^10.4.0",
-    "postcss": "^8.4.0"
+    "tailwindcss": "^3.3.0",
+    "vite": "^4.0.0"
   }
 }
