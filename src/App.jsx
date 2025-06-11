@@ -33,12 +33,7 @@ export default function App() {
   };
 
   const findBestCombo = (price, maxLeftover = 1500) => {
-    let bestCombo = null;
-    let bestTotalPaid = Infinity;
-    let bestTotalValue = 0;
-
     const maxCounts = [5, 5, 5, 5, 5, 5];
-
     const allCombos = (function* () {
       function* helper(index, current) {
         if (index === cardOptions.length) {
@@ -52,34 +47,36 @@ export default function App() {
       return helper(0, []);
     })();
 
+    let bestCombo = null;
+    let bestPaid = Infinity;
+    let bestValue = 0;
+
     for (const combo of allCombos) {
-      let totalValue = 0;
-      let totalPaid = 0;
-      let comboDetail = [];
+      let value = 0;
+      let paid = 0;
+      let detail = [];
 
       combo.forEach((count, idx) => {
         if (count > 0) {
           const card = cardOptions[idx];
-          totalValue += card.value * count;
-          totalPaid += card.price * count;
-          comboDetail.push({ ...card, count });
+          value += card.value * count;
+          paid += card.price * count;
+          detail.push({ ...card, count });
         }
       });
 
-      const leftover = totalValue - price;
-      if (totalValue >= price && leftover <= maxLeftover) {
-        if (totalPaid < bestTotalPaid) {
-          bestTotalPaid = totalPaid;
-          bestTotalValue = totalValue;
-          bestCombo = comboDetail;
-        }
+      const leftover = value - price;
+      if (value >= price && leftover <= maxLeftover && paid < bestPaid) {
+        bestCombo = detail;
+        bestPaid = paid;
+        bestValue = value;
       }
     }
 
     return {
       cards: bestCombo || [],
-      totalValue: bestTotalValue,
-      totalPaid: bestTotalPaid,
+      totalPaid: bestPaid !== Infinity ? bestPaid : 0,
+      totalValue: bestValue,
     };
   };
 
@@ -131,9 +128,7 @@ export default function App() {
           className="mb-4 border border-gray-300 rounded-md px-4 py-2 w-full"
         />
         <button
-          onClick={() => {
-            if (price > 0) calculate();
-          }}
+          onClick={() => price > 0 && calculate()}
           className="w-full bg-yellow-400 text-blue-900 font-bold hover:bg-yellow-300 py-2 rounded-md"
         >
           คำนวณ
@@ -162,22 +157,24 @@ export default function App() {
             <div className="mt-6 border border-blue-300 rounded-lg p-4 bg-blue-100">
               <h2 className="text-xl font-bold text-blue-800 mb-2">🅱️ ตัวเลือก B: ใช้บัตรให้คุ้มค่าที่สุด</h2>
               {result.nextBestOptionCards.length > 0 ? (
-                <ul className="list-disc list-inside mb-2">
-                  {result.nextBestOptionCards.map((card, idx) => (
-                    <li key={idx}>
-                      บัตรมูลค่า {card.price.toLocaleString()} บาท × {card.count} ใบ (ได้รับ {card.value.toLocaleString()} บาท/ใบ)
-                    </li>
-                  ))}
-                </ul>
+                <>
+                  <ul className="list-disc list-inside mb-2">
+                    {result.nextBestOptionCards.map((card, idx) => (
+                      <li key={idx}>
+                        บัตรมูลค่า {card.price.toLocaleString()} บาท × {card.count} ใบ (ได้รับ {card.value.toLocaleString()} บาท/ใบ)
+                      </li>
+                    ))}
+                  </ul>
+                  <p>มูลค่า Cash Card รวม: {result.totalValue2.toLocaleString()} บาท</p>
+                  <p className="mt-2 font-semibold text-blue-800">💳 ชำระเงินครั้งที่ 1: {result.totalPaid2.toLocaleString()} บาท</p>
+                  <p className="font-semibold text-blue-800">💸 ชำระเงินครั้งที่ 2: {result.cashGap2.toLocaleString()} บาท</p>
+                  <p className="font-bold text-red-600 text-xl mt-2">💰 รวมลูกค้าต้องจ่ายทั้งหมด: {result.totalToPay2.toLocaleString()} บาท</p>
+                  <p className="text-green-600 font-bold mt-2">ส่วนลดที่ได้รับ: {result.discountAmount2.toLocaleString()} บาท ({result.discountPercent2}%)</p>
+                  <p className="text-blue-700 font-semibold">มูลค่า Cash Card คงเหลือ: {result.remainingCashCardValue.toLocaleString()} บาท</p>
+                </>
               ) : (
                 <p className="text-gray-600 italic">ไม่พบชุดบัตรที่คุ้มค่าในเงื่อนไขนี้</p>
               )}
-              <p>มูลค่า Cash Card รวม: {result.totalValue2.toLocaleString()} บาท</p>
-              <p className="mt-2 font-semibold text-blue-800">💳 ชำระเงินครั้งที่ 1: {result.totalPaid2.toLocaleString()} บาท</p>
-              <p className="font-semibold text-blue-800">💸 ชำระเงินครั้งที่ 2: {result.cashGap2.toLocaleString()} บาท</p>
-              <p className="font-bold text-red-600 text-xl mt-2">💰 รวมลูกค้าต้องจ่ายทั้งหมด: {result.totalToPay2.toLocaleString()} บาท</p>
-              <p className="text-green-600 font-bold mt-2">ส่วนลดที่ได้รับ: {result.discountAmount2.toLocaleString()} บาท ({result.discountPercent2}%)</p>
-              <p className="text-blue-700 font-semibold">มูลค่า Cash Card คงเหลือ: {result.remainingCashCardValue.toLocaleString()} บาท</p>
             </div>
           </div>
         )}
