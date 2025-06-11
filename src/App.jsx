@@ -148,7 +148,7 @@ export default function App() {
         {result && (
           <div>
             <div className="mt-6 border border-blue-200 rounded-lg p-4 bg-blue-50">
-              <h2 className="text-xl font-bold text-blue-800 mb-2">🅰️ ตัวเลือก A: ใช้เท่าที่จำเป็น</h2>
+              <h2 className="text-xl font-bold text-blue-800 mb-2">🅰️ ตัวเลือก A: ใช้หมดไม่เหลือ</h2>
               <ul className="list-disc list-inside mb-2">
                 {result.cardsUsed.map((card, idx) => (
                   <li key={idx}>
@@ -164,7 +164,7 @@ export default function App() {
             </div>
 
             <div className="mt-6 border border-blue-300 rounded-lg p-4 bg-blue-100">
-              <h2 className="text-xl font-bold text-blue-800 mb-2">🅱️ ตัวเลือก B: ใช้บัตรให้ใกล้เคียงราคาสินค้าที่สุด</h2>
+              <h2 className="text-xl font-bold text-blue-800 mb-2">🅱️ ตัวเลือก B: หากซื้อเพิ่มเงินจะเหลือ</h2>
               {result.nextOptionCards.length > 0 ? (
                 <>
                   <ul className="list-disc list-inside mb-2">
