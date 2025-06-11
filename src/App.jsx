@@ -33,69 +33,66 @@ export default function App() {
   };
 
   const findClosestCombo = (price, maxEach = 5) => {
-    const maxCounts = [maxEach, maxEach, maxEach, maxEach, maxEach, maxEach];
-    const allCombos = (function* () {
-      function* helper(index, current) {
-        if (index === cardOptions.length) {
-          yield current;
-          return;
-        }
-        for (let i = 0; i <= maxCounts[index]; i++) {
-          yield* helper(index + 1, [...current, i]);
-        }
-      }
-      return helper(0, []);
-    })();
-
+    const allRanges = cardOptions.map(() => Array.from({ length: maxEach + 1 }, (_, i) => i));
     let bestCombo = null;
     let bestOver = Infinity;
     let bestPaid = Infinity;
+    let bestCardCount = Infinity;
 
-    for (const combo of allCombos) {
-      let value = 0;
-      let paid = 0;
-      combo.forEach((count, idx) => {
-        value += cardOptions[idx].value * count;
-        paid += cardOptions[idx].price * count;
-      });
+    const combine = (depth = 0, current = []) => {
+      if (depth === cardOptions.length) {
+        const totalValue = current.reduce((sum, count, i) => sum + cardOptions[i].value * count, 0);
+        const totalPaid = current.reduce((sum, count, i) => sum + cardOptions[i].price * count, 0);
+        const cardCount = current.reduce((sum, count) => sum + count, 0);
 
-      const over = value - price;
-      if (value >= price) {
-        if (over < bestOver || (over === bestOver && paid < bestPaid)) {
-          bestCombo = combo;
-          bestOver = over;
-          bestPaid = paid;
+        if (totalValue >= price) {
+          const over = totalValue - price;
+          if (
+            over < bestOver ||
+            (over === bestOver && totalPaid < bestPaid) ||
+            (over === bestOver && totalPaid === bestPaid && cardCount < bestCardCount)
+          ) {
+            bestCombo = [...current];
+            bestOver = over;
+            bestPaid = totalPaid;
+            bestCardCount = cardCount;
+          }
         }
+        return;
       }
-    }
 
-    if (!bestCombo) {
-      return {
-        cards: [],
-        totalValue: 0,
-        totalPaid: 0,
-      };
-    }
+      for (const count of allRanges[depth]) {
+        current.push(count);
+        combine(depth + 1, current);
+        current.pop();
+      }
+    };
+
+    combine();
+
+    if (!bestCombo) return { cards: [], totalPaid: 0, totalValue: 0, finalTotalPaid: 0, cashLeft: 0 };
 
     const cards = bestCombo
-      .map((count, idx) =>
-        count > 0 ? { ...cardOptions[idx], count } : null
-      )
+      .map((count, i) => (count > 0 ? { ...cardOptions[i], count } : null))
       .filter(Boolean);
 
-    const totalValue = cards.reduce(
-      (sum, card) => sum + card.value * card.count,
-      0
-    );
-    const totalPaid = cards.reduce(
-      (sum, card) => sum + card.price * card.count,
-      0
-    );
+    let totalValue = cards.reduce((sum, card) => sum + card.value * card.count, 0);
+    let totalPaid = cards.reduce((sum, card) => sum + card.price * card.count, 0);
+
+    const cashGap = price - totalValue;
+    if (cashGap >= 5000) {
+      const bonus = cardOptions.find((c) => c.price === 5000);
+      cards.push({ ...bonus, count: 1 });
+      totalValue += bonus.value;
+      totalPaid += bonus.price;
+    }
 
     return {
       cards,
-      totalValue,
       totalPaid,
+      totalValue,
+      finalTotalPaid: totalPaid,
+      cashLeft: totalValue - price,
     };
   };
 
@@ -109,11 +106,9 @@ export default function App() {
     const discountPercent = ((discountAmount / price) * 100).toFixed(2);
 
     const b = findClosestCombo(price);
-    const hasCombo = b.cards && b.cards.length > 0;
-    const totalToPay2 = hasCombo ? b.totalPaid : 0;
-    const discountAmount2 = hasCombo ? price - b.totalPaid : 0;
-    const discountPercent2 = hasCombo ? ((discountAmount2 / price) * 100).toFixed(2) : 0;
-    const leftover = hasCombo ? b.totalValue - price : 0;
+    const totalToPay2 = b.finalTotalPaid;
+    const discountAmount2 = price - totalToPay2;
+    const discountPercent2 = ((discountAmount2 / price) * 100).toFixed(2);
 
     setResult({
       cardsUsed: a.used,
@@ -123,13 +118,13 @@ export default function App() {
       totalToPay,
       discountAmount,
       discountPercent,
-      nextOptionCards: hasCombo ? b.cards : [],
-      totalValue2: hasCombo ? b.totalValue : 0,
-      totalPaid2: hasCombo ? b.totalPaid : 0,
+      nextOptionCards: b.cards,
+      totalValue2: b.totalValue,
+      totalPaid2: b.totalPaid,
       totalToPay2,
       discountAmount2,
       discountPercent2,
-      remainingCashCardValue: leftover,
+      remainingCashCardValue: b.cashLeft,
     });
   };
 
@@ -183,10 +178,10 @@ export default function App() {
                   <p className="mt-2 font-semibold text-blue-800">💳 ชำระเงินครั้งที่ 1: {result.totalPaid2.toLocaleString()} บาท</p>
                   <p className="font-bold text-red-600 text-xl mt-2">💰 รวมลูกค้าต้องจ่ายทั้งหมด: {result.totalToPay2.toLocaleString()} บาท</p>
                   <p className="text-green-600 font-bold mt-2">ส่วนลดที่ได้รับ: {result.discountAmount2.toLocaleString()} บาท ({result.discountPercent2}%)</p>
-                  <p className="text-blue-700 font-semibold">มูลค่า Cash Card คงเหลือ: {result.remainingCashCardValue.toLocaleString()} บาท</p>
+                  <p className="text-blue-700 font-semibold">💼 มูลค่า Cash Card คงเหลือ: {result.remainingCashCardValue.toLocaleString()} บาท</p>
                 </>
               ) : (
-                <p className="text-gray-600 italic">ไม่พบชุดบัตรที่เหมาะสมสำหรับราคานี้</p>
+                <p className="text-gray-600 italic">ไม่พบชุดบัตรที่เหมาะสม</p>
               )}
             </div>
           </div>
