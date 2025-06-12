@@ -148,11 +148,11 @@ export default function App() {
         {result && (
           <div>
             <div className="mt-6 border border-blue-200 rounded-lg p-4 bg-blue-50">
-              <h2 className="text-xl font-bold text-blue-800 mb-2">🅰️ ตัวเลือก A: ใช้ Cash Card หมด</h2>
+              <h2 className="text-xl font-bold text-blue-800 mb-2">🅰️ ตัวเลือก A: ใช้หมด</h2>
               <ul className="list-disc list-inside mb-2">
                 {result.cardsUsed.map((card, idx) => (
                   <li key={idx}>
-                    บัตรมูลค่า {card.price.toLocaleString()} บาท × {card.count} ใบ (ได้รับ {card.value.toLocaleString()} บาท/ใบ)
+                    บัตร {card.price.toLocaleString()} บาท × {card.count} ใบ (ได้รับ {card.value.toLocaleString()} บาท/ใบ)
                   </li>
                 ))}
               </ul>
@@ -164,13 +164,13 @@ export default function App() {
             </div>
 
             <div className="mt-6 border border-blue-300 rounded-lg p-4 bg-blue-100">
-              <h2 className="text-xl font-bold text-blue-800 mb-2">🅱️ ตัวเลือก B:ซื้อเพิ่ม 1 Step (เงินเหลือ)</h2>
+              <h2 className="text-xl font-bold text-blue-800 mb-2">🅱️ ตัวเลือก B:ซื้อเพิ่ม (เงินเหลือ)</h2>
               {result.nextOptionCards.length > 0 ? (
                 <>
                   <ul className="list-disc list-inside mb-2">
                     {result.nextOptionCards.map((card, idx) => (
                       <li key={idx}>
-                        บัตรมูลค่า {card.price.toLocaleString()} บาท × {card.count} ใบ (ได้รับ {card.value.toLocaleString()} บาท/ใบ)
+                        บัตร {card.price.toLocaleString()} บาท × {card.count} ใบ (ได้รับ {card.value.toLocaleString()} บาท/ใบ)
                       </li>
                     ))}
                   </ul>
@@ -178,8 +178,9 @@ export default function App() {
                   <p className="mt-2 font-semibold text-blue-800">💳 ชำระเงินค่า Cash Card: {result.totalPaid2.toLocaleString()} บาท</p>
                   <p className="font-bold text-red-600 text-xl mt-2">💰 รวมลูกค้าต้องจ่ายทั้งหมด: {result.totalToPay2.toLocaleString()} บาท</p>
                   <p className="text-green-600 font-bold mt-2">ส่วนลดที่ได้รับ : {result.discountAmount2.toLocaleString()} บาท ({result.discountPercent2}%)</p>
-                  <p className="text-green-600 font-bold mt-2">ℹ️ถ้าส่วนลดติดลบ เงินเพิ่มไม่ได้ใช้ชำระในบิล อยู่ในเงินเหลือ แนะนำตัวเลือก🅰️</p>
+                  
                   <p className="text-blue-700 font-semibold">💼 มูลค่า Cash Card คงเหลือ: {result.remainingCashCardValue.toLocaleString()} บาท</p>
+                  <p className="text-green-600 font-bold mt-2">ℹ️ถ้าส่วนลดติดลบ เงินเพิ่มไม่ถูกใช้ เป็นเงินเหลือ แนะนำตัวเลือก🅰️</p>
                 </>
               ) : (
                 <p className="text-gray-600 italic">ไม่พบชุดบัตรที่เหมาะสม</p>
