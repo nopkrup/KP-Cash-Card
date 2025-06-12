@@ -131,7 +131,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-blue-900 p-4 text-gray-100">
       <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-lg p-6 text-gray-800">
-        <h1 className="text-2xl font-bold text-blue-800 mb-4 text-center">คำนวณการซื้อ Cash Card </h1>
+        <h1 className="text-2xl font-bold text-blue-800 mb-4 text-center">โปรแกรมคิด Cash Card (ภายในเท่านั้น) </h1>
         <input
           type="number"
           placeholder="กรอกราคาสินค้า (บาท)"
@@ -179,7 +179,7 @@ export default function App() {
                   <p className="font-bold text-red-600 text-xl mt-2">💰 รวมลูกค้าต้องจ่ายทั้งหมด: {result.totalToPay2.toLocaleString()} บาท</p>
                   <p className="text-green-600 font-bold mt-2">ส่วนลดที่ได้รับ : {result.discountAmount2.toLocaleString()} บาท ({result.discountPercent2}%)</p>
                   
-                  <p className="text-blue-700 font-semibold">💼 มูลค่า Cash Card คงเหลือ: {result.remainingCashCardValue.toLocaleString()} บาท</p>
+                  <p className="text-blue-700 font-semibold">📌 Cash Card คงเหลือ: {result.remainingCashCardValue.toLocaleString()} บาท</p>
                   <p className="text-green-600 font-bold mt-2">ℹ️ถ้าส่วนลดติดลบ เงินเพิ่มไม่ถูกใช้ เป็นเงินเหลือ แนะนำตัวเลือก🅰️</p>
                 </>
               ) : (
