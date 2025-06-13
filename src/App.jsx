@@ -171,7 +171,6 @@ export default function App() {
                   <p className="font-bold text-red-600 text-xl mt-2">💰 รวมลูกค้าต้องจ่ายทั้งหมด: {result.totalToPay2.toLocaleString()} บาท</p>
                   <p className="text-green-600 font-bold mt-2">ส่วนลดที่ได้รับ คิดจากจ่ายจริง/ราคาสินค้า: {result.discountAmount2.toLocaleString()} บาท ({result.discountPercent2}%) </p>
                   <p className="text-green-600 font-bold mt-2">ℹ️แท้จริงลูกค้าได้รับ 30%  แต่มีเงินเหลือ *ถ้าส่วนลดติดลบ เกิดจากเงินเพิ่มไม่ถูกใช้ แนะนำตัวเลือก🅰️</p>
-                  <P></P>
                   <p className="text-blue-700 font-semibold">📌 Cash Card คงเหลือ: {result.remainingCashCardValue.toLocaleString()} บาท</p>
                 </>
               ) : (
