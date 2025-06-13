@@ -4,12 +4,12 @@ export default function App() {
   const [price, setPrice] = useState(0);
   const [result, setResult] = useState(null);
 
-  const cardOptions = [
-    { price: 7000, value: 10000 },
-    { price: 21000, value: 30000 },
-    { price: 35000, value: 50000 },
-    { price: 70000, value: 100000 },
-  ];
+const cardOptions = [
+  { price: 70000, value: 100000 },
+  { price: 35000, value: 50000 },
+  { price: 21000, value: 30000 },
+  { price: 7000, value: 10000 },
+];
 
   const greedyUse = (amount) => {
     let remaining = amount;
