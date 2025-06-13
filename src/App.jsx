@@ -5,12 +5,10 @@ export default function App() {
   const [result, setResult] = useState(null);
 
   const cardOptions = [
-    { price: 100000, value: 130000 },
-    { price: 50000, value: 65000 },
-    { price: 30000, value: 39000 },
-    { price: 20000, value: 26000 },
-    { price: 10000, value: 13000 },
-    { price: 5000, value: 6500 },
+    { price: 7000, value: 10000 },
+    { price: 21000, value: 30000 },
+    { price: 35000, value: 50000 },
+    { price: 70000, value: 100000 },
   ];
 
   const greedyUse = (amount) => {
@@ -76,16 +74,8 @@ export default function App() {
       .map((count, i) => (count > 0 ? { ...cardOptions[i], count } : null))
       .filter(Boolean);
 
-    let totalValue = cards.reduce((sum, card) => sum + card.value * card.count, 0);
-    let totalPaid = cards.reduce((sum, card) => sum + card.price * card.count, 0);
-
-    const cashGap = price - totalValue;
-    if (cashGap >= 5000) {
-      const bonus = cardOptions.find((c) => c.price === 5000);
-      cards.push({ ...bonus, count: 1 });
-      totalValue += bonus.value;
-      totalPaid += bonus.price;
-    }
+    const totalValue = cards.reduce((sum, card) => sum + card.value * card.count, 0);
+    const totalPaid = cards.reduce((sum, card) => sum + card.price * card.count, 0);
 
     return {
       cards,
@@ -131,7 +121,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-blue-900 p-4 text-gray-100">
       <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-lg p-6 text-gray-800">
-        <h1 className="text-2xl font-bold text-blue-800 mb-4 text-center">โปรแกรมคิด Cash Card (ภายในเท่านั้น) </h1>
+        <h1 className="text-2xl font-bold text-blue-800 mb-4 text-center">โปรแกรม Cash Card NEW (ภายในเท่านั้น)</h1>
         <input
           type="number"
           placeholder="กรอกราคาสินค้า (บาท)"
@@ -147,6 +137,7 @@ export default function App() {
 
         {result && (
           <div>
+            {/* ตัวเลือก A */}
             <div className="mt-6 border border-blue-200 rounded-lg p-4 bg-blue-50">
               <h2 className="text-xl font-bold text-blue-800 mb-2">🅰️ ตัวเลือก A: ใช้หมด</h2>
               <ul className="list-disc list-inside mb-2">
@@ -163,8 +154,9 @@ export default function App() {
               <p className="text-green-600 font-bold mt-2">ส่วนลดที่ได้รับ: {result.discountAmount.toLocaleString()} บาท ({result.discountPercent}%)</p>
             </div>
 
+            {/* ตัวเลือก B */}
             <div className="mt-6 border border-blue-300 rounded-lg p-4 bg-blue-100">
-              <h2 className="text-xl font-bold text-blue-800 mb-2">🅱️ ตัวเลือก B:ซื้อเพิ่ม (เงินเหลือ)</h2>
+              <h2 className="text-xl font-bold text-blue-800 mb-2">🅱️ ตัวเลือก B: ซื้อเพิ่ม (เงินเหลือ)</h2>
               {result.nextOptionCards.length > 0 ? (
                 <>
                   <ul className="list-disc list-inside mb-2">
@@ -177,10 +169,9 @@ export default function App() {
                   <p>มูลค่า Cash Card รวม: {result.totalValue2.toLocaleString()} บาท</p>
                   <p className="mt-2 font-semibold text-blue-800">💳 ชำระเงินค่า Cash Card: {result.totalPaid2.toLocaleString()} บาท</p>
                   <p className="font-bold text-red-600 text-xl mt-2">💰 รวมลูกค้าต้องจ่ายทั้งหมด: {result.totalToPay2.toLocaleString()} บาท</p>
-                  <p className="text-green-600 font-bold mt-2">ส่วนลดที่ได้รับ : {result.discountAmount2.toLocaleString()} บาท ({result.discountPercent2}%)</p>
-                  
+                  <p className="text-green-600 font-bold mt-2">ส่วนลดที่ได้รับ ส่วนต่างราคาสินค้า/จ่ายจริง: {result.discountAmount2.toLocaleString()} บาท ({result.discountPercent2}%)</p>
                   <p className="text-blue-700 font-semibold">📌 Cash Card คงเหลือ: {result.remainingCashCardValue.toLocaleString()} บาท</p>
-                  <p className="text-green-600 font-bold mt-2">ℹ️ถ้าส่วนลดติดลบ เงินเพิ่มไม่ถูกใช้ เป็นเงินเหลือ แนะนำตัวเลือก🅰️</p>
+                  <p className="text-green-600 font-bold mt-2">ℹ️ส่วนลดในบิลคือ 30% ถ้าส่วนลดติดลบ เกิดจากเงินเพิ่มไม่ถูกใช้ แนะนำตัวเลือก🅰️</p>
                 </>
               ) : (
                 <p className="text-gray-600 italic">ไม่พบชุดบัตรที่เหมาะสม</p>
