@@ -121,7 +121,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-blue-900 p-4 text-gray-100">
       <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-lg p-6 text-gray-800">
-        <h1 className="text-2xl font-bold text-blue-800 mb-4 text-center">โปรแกรม Cash Card NEW (ภายในเท่านั้น)</h1>
+        <h1 className="text-2xl font-bold text-blue-800 mb-4 text-center">Cash Card NEW (ภายในเท่านั้น)</h1>
         <input
           type="number"
           placeholder="กรอกราคาสินค้า (บาท)"
